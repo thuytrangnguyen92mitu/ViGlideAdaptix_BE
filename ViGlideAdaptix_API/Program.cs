@@ -27,9 +27,10 @@ builder.Services.AddScoped<JWTToken>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
 
-
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 //Register for Repository
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
 
 
 
