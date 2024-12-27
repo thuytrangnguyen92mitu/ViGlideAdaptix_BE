@@ -24,4 +24,10 @@ public partial class ShoppingCart
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 
     public virtual ICollection<ShoppingCartItem> ShoppingCartItems { get; set; } = new List<ShoppingCartItem>();
+
+	public decimal CalculateTotalPrice()
+	{
+		return ShoppingCartItems.Sum(item => item.Quantity * item.UnitPrice) + ShippingPrice;
+	}
+
 }

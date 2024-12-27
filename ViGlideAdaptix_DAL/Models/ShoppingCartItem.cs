@@ -16,4 +16,9 @@ public partial class ShoppingCartItem
     public decimal UnitPrice { get; set; }
 
     public virtual ShoppingCart Cart { get; set; } = null!;
+
+	public decimal CalculateItemTotal()
+	{
+		return Quantity * UnitPrice;
+	}
 }
