@@ -30,8 +30,9 @@ public partial class ViGlideAdaptixContext : DbContext
     public virtual DbSet<Privacy> Privacies { get; set; }
 
     public virtual DbSet<Product> Products { get; set; }
+	public virtual DbSet<Brand> Brands { get; set; }
 
-    public virtual DbSet<Rating> Ratings { get; set; }
+	public virtual DbSet<Rating> Ratings { get; set; }
 
     public virtual DbSet<Role> Roles { get; set; }
 
@@ -48,7 +49,14 @@ public partial class ViGlideAdaptixContext : DbContext
             entity.Property(e => e.Detail).HasMaxLength(255);
         });
 
-        modelBuilder.Entity<Category>(entity =>
+		modelBuilder.Entity<Brand>(entity =>
+		{
+			entity.ToTable("Brand");
+
+			entity.Property(e => e.BrandName).HasMaxLength(50);
+		});
+
+		modelBuilder.Entity<Category>(entity =>
         {
             entity.ToTable("Category");
 
@@ -151,7 +159,12 @@ public partial class ViGlideAdaptixContext : DbContext
                 .HasForeignKey(d => d.CategoryId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Product_Category");
-        });
+
+			entity.HasOne(d => d.Brand).WithMany(p => p.Products)
+				.HasForeignKey(d => d.BrandId)
+				.OnDelete(DeleteBehavior.ClientSetNull)
+				.HasConstraintName("FK_Product_Brand");
+		});
 
         modelBuilder.Entity<Rating>(entity =>
         {
