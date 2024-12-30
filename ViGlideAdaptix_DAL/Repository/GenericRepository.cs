@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq.Expressions;
 using ViGlideAdaptix_DAL.Models;
 
@@ -45,7 +46,7 @@ namespace ViGlideAdaptix_DAL.Repository
 			return await _dbSet.FindAsync(TId);
 		}
 
-		public async Task<T?> GetByIdWithIncludeAsync(int TId, params Expression<Func<T, object>>[] includeProperties)
+		public async Task<T?> GetByIdWithIncludeAsync(int TId,string typeId, params Expression<Func<T, object>>[] includeProperties)
 		{
 			IQueryable<T> query = _dbSet;
 
@@ -54,7 +55,7 @@ namespace ViGlideAdaptix_DAL.Repository
 				query = query.Include(includeProperty);
 			}
 
-			return await query.FirstOrDefaultAsync(entity => EF.Property<int>(entity, "CartId") == TId);
+			return await query.FirstOrDefaultAsync(entity => EF.Property<int>(entity, typeId) == TId);
 		}
 
 		public async Task SaveChangeAsync()
@@ -68,3 +69,5 @@ namespace ViGlideAdaptix_DAL.Repository
 		}
 	}
 }
+
+
