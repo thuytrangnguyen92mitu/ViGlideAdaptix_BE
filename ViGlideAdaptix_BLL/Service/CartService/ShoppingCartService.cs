@@ -32,7 +32,7 @@ namespace ViGlideAdaptix_BLL.Service.CartService
 				if (foundCustomer == null)
 					return (null, "Cannot find Customer with that ID!");
 
-				var foundCart = await _unitOfWork.CartRepository.GetByIdWithIncludeAsync(request.CartId, cart => cart.ShoppingCartItems);
+				var foundCart = await _unitOfWork.CartRepository.GetByIdWithIncludeAsync(request.CartId,"CartId", cart => cart.ShoppingCartItems);
 				if (foundCart != null)
 				{
 					var convertedCart = ConvertToCartResponse(foundCart);
@@ -58,7 +58,7 @@ namespace ViGlideAdaptix_BLL.Service.CartService
 			{
 				await _unitOfWork.BeginTransactionAsync();
 
-				var foundCart = await _unitOfWork.CartRepository.GetByIdWithIncludeAsync(cartId, cart => cart.ShoppingCartItems);
+				var foundCart = await _unitOfWork.CartRepository.GetByIdWithIncludeAsync(cartId,"CartId", cart => cart.ShoppingCartItems);
 				if (foundCart == null)
 					return (false, "Cannot find cart with that ID");
 
@@ -92,7 +92,7 @@ namespace ViGlideAdaptix_BLL.Service.CartService
 			{
 				await _unitOfWork.BeginTransactionAsync();
 
-				var foundCart = await _unitOfWork.CartRepository.GetByIdWithIncludeAsync(request.CartId, cart => cart.ShoppingCartItems);
+				var foundCart = await _unitOfWork.CartRepository.GetByIdWithIncludeAsync(request.CartId, "CartId", cart => cart.ShoppingCartItems);
 				if (foundCart == null)
 					return (false, "Cannot find cart with that ID");
 
@@ -146,7 +146,7 @@ namespace ViGlideAdaptix_BLL.Service.CartService
 			{
 				await _unitOfWork.BeginTransactionAsync();
 
-				var foundCart = await _unitOfWork.CartRepository.GetByIdWithIncludeAsync(request.CartId, cart => cart.ShoppingCartItems);
+				var foundCart = await _unitOfWork.CartRepository.GetByIdWithIncludeAsync(request.CartId, "CartId", cart => cart.ShoppingCartItems);
 				if (foundCart == null)
 					return (false, "Cannot find cart with that ID");
 
@@ -213,7 +213,7 @@ namespace ViGlideAdaptix_BLL.Service.CartService
 			{
 				await _unitOfWork.BeginTransactionAsync();
 
-				var foundCart = await _unitOfWork.CartRepository.GetByIdWithIncludeAsync(request.CartId, cart => cart.ShoppingCartItems);
+				var foundCart = await _unitOfWork.CartRepository.GetByIdWithIncludeAsync(request.CartId, "CartId", cart => cart.ShoppingCartItems);
 				if (foundCart == null)
 					return (false, "Cart not found with this ID");
 
