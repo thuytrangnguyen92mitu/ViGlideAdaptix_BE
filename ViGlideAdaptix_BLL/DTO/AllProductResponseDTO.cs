@@ -26,5 +26,7 @@ namespace ViGlideAdaptix_BLL.DTO
 
 		public int BrandId { get; set; }
 
+		public double RatingScore { get; set; }
+
 	}
 }
