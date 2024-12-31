@@ -7,9 +7,9 @@ public partial class Rating
 {
     public int RatingId { get; set; }
 
-    public int OrderId { get; set; }
+	public int OrderItemId { get; set; }
 
-    public int CustomerId { get; set; }
+	public int CustomerId { get; set; }
 
     public int Score { get; set; }
 
@@ -21,7 +21,5 @@ public partial class Rating
 
     public virtual Customer Customer { get; set; } = null!;
 
-    public virtual Order Order { get; set; } = null!;
-
-    public virtual Product Product { get; set; } = null!;
+	public virtual OrderDetail OrderItem { get; set; } = null!;
 }

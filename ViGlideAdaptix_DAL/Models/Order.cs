@@ -33,5 +33,4 @@ public partial class Order
 
     public virtual PaymentMethod PaymentMethod { get; set; } = null!;
 
-    public virtual ICollection<Rating> Ratings { get; set; } = new List<Rating>();
 }

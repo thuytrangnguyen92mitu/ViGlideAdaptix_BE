@@ -26,9 +26,9 @@ public partial class Product
     public int Status { get; set; }
 
     public virtual Category Category { get; set; } = null!;
+
 	public virtual Brand Brand { get; set; } = null!;
 
 	public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 
-    public virtual ICollection<Rating> Ratings { get; set; } = new List<Rating>();
 }
