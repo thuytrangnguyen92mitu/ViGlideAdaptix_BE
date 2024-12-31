@@ -5,6 +5,7 @@ using System.Text;
 using ViGlideAdaptix_BLL.Helper;
 using ViGlideAdaptix_BLL.Service.CartService;
 using ViGlideAdaptix_BLL.Service.CustomerService;
+using ViGlideAdaptix_BLL.Service.ProductService;
 using ViGlideAdaptix_DAL.Models;
 using ViGlideAdaptix_DAL.Repository;
 
@@ -23,9 +24,12 @@ builder.Services.AddDbContext<ViGlideAdaptixContext>(options =>
 //Register for Service
 builder.Services.AddScoped<HashSha256>();
 builder.Services.AddScoped<JWTToken>();
+builder.Services.AddScoped<ImageHelper>();
+
 
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
+builder.Services.AddScoped<IProductServices, ProductServices>();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 //Register for Repository
@@ -47,7 +51,7 @@ builder.Services.AddAuthentication(options =>
 				options.TokenValidationParameters = new TokenValidationParameters
 				{
 					ValidateIssuerSigningKey = true,
-					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"] ??"")),
+					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"] ?? "")),
 					ValidateIssuer = true,
 					ValidateAudience = true,
 					ValidAudience = builder.Configuration["JWT:ValidAudience"],
