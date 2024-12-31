@@ -17,6 +17,7 @@ namespace ViGlideAdaptix_DAL.Repository
 		IGenericRepository<Order> OrderRepository { get; }
 		IGenericRepository<OrderDetail> OrderDetailRepository { get; }
 
+		IGenericRepository<Rating> RatingRepository { get; }
 
 		Task BeginTransactionAsync();
 		Task CommitTransactionAsync();
