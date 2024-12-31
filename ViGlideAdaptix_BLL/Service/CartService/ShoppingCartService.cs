@@ -120,8 +120,8 @@ namespace ViGlideAdaptix_BLL.Service.CartService
 					await _unitOfWork.CartItemRepository.AddAsync(newItem);
 				}
 
-				foundProduct.Quantity--;
-				_unitOfWork.ProductRepository.Update(foundProduct);
+				//foundProduct.Quantity--;
+				//_unitOfWork.ProductRepository.Update(foundProduct);
 
 				await _unitOfWork.SaveChangesAsync();
 				await _unitOfWork.CommitTransactionAsync();
@@ -242,7 +242,7 @@ namespace ViGlideAdaptix_BLL.Service.CartService
 					PaymentMethodId = paymentMethod.PaymentMethodId,
 					EstDeliveryDate = DateTime.UtcNow,
 					Tax = (Double)foundCart.TotalPrice * 0.1, //transfer to constant
-					Status = 1
+					Status = 2
 				};
 
 				await _unitOfWork.OrderRepository.AddAsync(order);
