@@ -57,20 +57,29 @@ namespace ViGlideAdaptix_BLL.Service.ProductService
 			int totalRecords = products.Count();
 
 			//Paging list of product
-			var pagedProducts = products.Skip(pageNumber - 1)
-										.Take(pageSize)
-										.Select(p => new AllProductResponseDTO
-										{
-											ProductId = p.ProductId,
-											ProductName = p.ProductName,
-											ProductDescription = p.ProductDescription,
-											ProductImage = _imageHelper.ConvertImageToBase64(p.ProductImage),
-											CategoryId = p.CategoryId,
-											BrandId = p.BrandId,
-											Purchases = p.Purchases,
-											Quantity = p.Quantity,
-											UnitPrice = p.UnitPrice,
-										}).ToList();
+			var pagedProducts = new List<AllProductResponseDTO>();
+
+			foreach (var p in products.Skip((pageNumber - 1) * pageSize).Take(pageSize))
+			{
+				var ratings = await GetAllRatingOfProduct(p.ProductId);
+				double averageRating = (ratings == null || ratings.Count() == 0 )
+										? 0 
+										: ratings.Average();
+
+				pagedProducts.Add(new AllProductResponseDTO
+				{
+					ProductId = p.ProductId,
+					ProductName = p.ProductName,
+					ProductDescription = p.ProductDescription,
+					ProductImage = _imageHelper.ConvertImageToBase64(p.ProductImage),
+					CategoryId = p.CategoryId,
+					BrandId = p.BrandId,
+					Purchases = p.Purchases,
+					Quantity = p.Quantity,
+					RatingScore = averageRating,
+					UnitPrice = p.UnitPrice,
+				});
+			}
 
 			return new PagedResult<AllProductResponseDTO>
 			{
@@ -92,6 +101,11 @@ namespace ViGlideAdaptix_BLL.Service.ProductService
 
 			if (foundProduct != null)
 			{
+				var ratings = await GetAllRatingOfProduct(foundProduct.ProductId);
+				double averageRating = (ratings == null || ratings.Count() == 0)
+										? 0
+										: ratings.Average();
+
 				var convertedProduct = new AllProductResponseDTO
 				{
 					ProductId = foundProduct.ProductId,
@@ -102,6 +116,7 @@ namespace ViGlideAdaptix_BLL.Service.ProductService
 					BrandId = foundProduct.BrandId,
 					Purchases = foundProduct.Purchases,
 					Quantity = foundProduct.Quantity,
+					RatingScore = averageRating,
 					UnitPrice = foundProduct.UnitPrice,
 				};
 				return convertedProduct;
@@ -171,6 +186,23 @@ namespace ViGlideAdaptix_BLL.Service.ProductService
 				throw new ApplicationException("Error create product", ex);
 			}
 
+		}
+
+		/// <summary>
+		/// Help to get all rating score of product
+		/// Return List of rating score
+		/// </summary>
+		private async Task<List<int>?> GetAllRatingOfProduct(int productId)
+		{
+			var foundProduct = await _unitOfWork.ProductRepository.GetByIdWithIncludeAsync(productId, "ProductId", p => p.Ratings);
+			if (foundProduct != null)
+			{
+				var ratingList = foundProduct.Ratings.ToList();
+				var scoreList = ratingList.Select(x => x.Score).ToList();
+
+				return scoreList;
+			}
+			return null;
 		}
 	}
 }
