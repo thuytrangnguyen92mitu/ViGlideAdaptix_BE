@@ -194,11 +194,11 @@ namespace ViGlideAdaptix_BLL.Service.ProductService
 		/// </summary>
 		private async Task<List<int>?> GetAllRatingOfProduct(int productId)
 		{
-			var foundProduct = await _unitOfWork.ProductRepository.GetByIdWithIncludeAsync(productId, "ProductId", p => p.Ratings);
+			var foundProduct = await _unitOfWork.ProductRepository.GetByIdAsync(productId);
 			if (foundProduct != null)
 			{
-				var ratingList = foundProduct.Ratings.ToList();
-				var scoreList = ratingList.Select(x => x.Score).ToList();
+				var ratingList = await _unitOfWork.RatingRepository.GetAllAsync();
+				var scoreList = ratingList.Where(x => x.ProductId == foundProduct.ProductId).Select(x => x.Score).ToList();
 
 				return scoreList;
 			}
