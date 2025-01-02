@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using ViGlideAdaptix_BLL.DTO;
@@ -22,7 +23,8 @@ namespace ViGlideAdaptix_API.Controllers
 		/// Return Cart, Cart Detail, Message
 		/// </summary>
 		[HttpPost("get")]
-		public async Task<IActionResult> GetCart([FromBody] CartRequestDTO request)
+        [Authorize(Roles = "customer")]
+        public async Task<IActionResult> GetCart([FromBody] CartRequestDTO request)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
@@ -43,7 +45,8 @@ namespace ViGlideAdaptix_API.Controllers
 		/// 
 		/// </summary>
 		[HttpPost("add")]
-		public async Task<IActionResult> AddItemToCart([FromBody] AddToCartRequestDTO request)
+        [Authorize(Roles = "customer")]
+        public async Task<IActionResult> AddItemToCart([FromBody] AddToCartRequestDTO request)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
@@ -58,7 +61,8 @@ namespace ViGlideAdaptix_API.Controllers
 		/// 
 		/// </summary>
 		[HttpPost("remove")]
-		public async Task<IActionResult> RemoveItemFromCart([FromBody] RemoveFromCartDTO request)
+        [Authorize(Roles = "customer")]
+        public async Task<IActionResult> RemoveItemFromCart([FromBody] RemoveFromCartDTO request)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
@@ -77,7 +81,8 @@ namespace ViGlideAdaptix_API.Controllers
 		/// Clear all items of that cart
 		/// </summary>
 		[HttpDelete("clear")]
-		public async Task<IActionResult> ClearCart([FromQuery] int cartId)
+        [Authorize(Roles = "customer")]
+        public async Task<IActionResult> ClearCart([FromQuery] int cartId)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
@@ -89,8 +94,15 @@ namespace ViGlideAdaptix_API.Controllers
 			return BadRequest(message);
 		}
 
+		/// <summary>
+		/// Check out Cart
+		/// CheckOutRequestDTO
+		/// </summary>
+		/// <param name="request"></param>
+		/// <returns></returns>
 		[HttpPost("checkout")]
-		public async Task<IActionResult> CheckOutCart([FromBody] CheckOutRequestDTO request)
+        [Authorize(Roles = "customer")]
+        public async Task<IActionResult> CheckOutCart([FromBody] CheckOutRequestDTO request)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);

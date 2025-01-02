@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ViGlideAdaptix_BLL.DTO;
 using ViGlideAdaptix_BLL.Service.CustomerService;
@@ -74,7 +75,8 @@ namespace ViGlideAdaptix_API.Controllers
 		/// Return status + message
 		/// </summary>
 		[HttpPost("profile")]
-		public async Task<IActionResult> UpdateProfile([FromBody] UpdateRequestDTO request)
+        [Authorize(Roles = "customer")]
+        public async Task<IActionResult> UpdateProfile([FromBody] UpdateRequestDTO request)
 		{
 			//Check required fields
 			if (string.IsNullOrEmpty(request.Address) || string.IsNullOrEmpty(request.PhoneNumber) ||

@@ -38,7 +38,7 @@ namespace ViGlideAdaptix_BLL.Service.CustomerService
 
 				//Get all the list of Customer
 				var customerList = await _customerRepo.GetAllWithIncludeAsync(c => ((Customer)c).Role,
-																			   c => ((Customer)c).ShoppingCarts.Where(
+																			  c => ((Customer)c).ShoppingCarts.Where(
 																									c => c.IsActive == true));
 
 				//Found the customer with email and password and not banned from the system

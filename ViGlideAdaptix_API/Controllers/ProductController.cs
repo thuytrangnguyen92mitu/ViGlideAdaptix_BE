@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ViGlideAdaptix_BLL.DTO;
 using ViGlideAdaptix_BLL.Service.ProductService;
@@ -48,7 +49,8 @@ namespace ViGlideAdaptix_API.Controllers
 		/// 
 		/// </summary>
 		[HttpPost("add")]
-		public async Task<IActionResult> ModCreateProduct([FromBody] CreateProductResquestDTO request)
+        [Authorize(Roles = "mod")]
+        public async Task<IActionResult> ModCreateProduct([FromBody] CreateProductResquestDTO request)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);

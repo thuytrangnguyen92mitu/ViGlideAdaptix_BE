@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.IO.IsolatedStorage;
 using ViGlideAdaptix_BLL.DTO;
@@ -17,7 +18,8 @@ namespace ViGlideAdaptix_API.Controllers
 		}
 
 		[HttpPost("confirm/{orderId}")]
-		public async Task<IActionResult> ConfirmOrder(int orderId)
+        [Authorize(Roles = "customer")]
+        public async Task<IActionResult> ConfirmOrder(int orderId)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
@@ -30,7 +32,8 @@ namespace ViGlideAdaptix_API.Controllers
 		}
 
 		[HttpPost("cancel/{orderId}")]
-		public async Task<IActionResult> CancelOrder(int orderId)
+        [Authorize(Roles = "customer")]
+        public async Task<IActionResult> CancelOrder(int orderId)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
@@ -43,7 +46,8 @@ namespace ViGlideAdaptix_API.Controllers
 		}
 
 		[HttpPost("rating")]
-		public async Task<IActionResult> RatingProduct([FromQuery] int orderId, [FromBody] RatingRequestDTO request)
+        [Authorize(Roles = "customer")]
+        public async Task<IActionResult> RatingProduct([FromQuery] int orderId, [FromBody] RatingRequestDTO request)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);

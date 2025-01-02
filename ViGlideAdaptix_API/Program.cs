@@ -20,7 +20,18 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 //Add service for DBContext
 builder.Services.AddDbContext<ViGlideAdaptixContext>(options =>
-				options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+// Add CORS policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 //Register for Service
 builder.Services.AddScoped<HashSha256>();
 builder.Services.AddScoped<JWTToken>();
@@ -41,24 +52,24 @@ builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepositor
 // Configure JWT Authentication
 builder.Services.AddAuthentication(options =>
 {
-	options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-	options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-	options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(options =>
-			{
-				options.SaveToken = true;
-				options.RequireHttpsMetadata = false;
-				options.TokenValidationParameters = new TokenValidationParameters
-				{
-					ValidateIssuerSigningKey = true,
-					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"] ?? "")),
-					ValidateIssuer = true,
-					ValidateAudience = true,
-					ValidAudience = builder.Configuration["JWT:ValidAudience"],
-					ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
-					ClockSkew = TimeSpan.Zero
-				};
-			});
+            {
+                options.SaveToken = true;
+                options.RequireHttpsMetadata = false;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"] ?? "")),
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidAudience = builder.Configuration["JWT:ValidAudience"],
+                    ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
 
 
 var app = builder.Build();
@@ -66,12 +77,13 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-	app.UseSwagger();
-	app.UseSwaggerUI();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
-
+app.UseCors("AllowAllOrigins");
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
