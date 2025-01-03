@@ -8,5 +8,7 @@ namespace ViGlideAdaptix_BLL.Service.CustomerService
 		Task<(bool, Customer?, int, int, string?, string?)> Authenticate(LoginRequestDTO request);
 		Task<(bool, string)> RegisterCustomerAccount(RegisterRequestDTO request);
 		Task<(bool, string)> UpdateCustomerProfile(UpdateRequestDTO request);
-	}
+		Task<CustomerInforResponseDTO?> GetCustomerInformation(int customerId);
+
+    }
 }
