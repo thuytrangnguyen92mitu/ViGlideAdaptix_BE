@@ -11,7 +11,7 @@ namespace ViGlideAdaptix_BLL.DTO
 
 		public string ProductName { get; set; } = null!;
 
-		public string? ProductImage { get; set; }
+		public string? ProductImage { get; set; } = string.Empty;
 
 		public string? ProductDescription { get; set; }
 
