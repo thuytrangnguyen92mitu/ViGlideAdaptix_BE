@@ -17,15 +17,14 @@ namespace ViGlideAdaptix_DAL.Repository
 		public IGenericRepository<ShoppingCartItem> CartItemRepository { get; }
 		public IGenericRepository<Product> ProductRepository { get; }
 		public IGenericRepository<Customer> CustomerRepository { get; }
-
 		public IGenericRepository<PaymentMethod> PaymentMethodRepository { get; }
-
 		public IGenericRepository<Order> OrderRepository { get; }
 		public IGenericRepository<OrderDetail> OrderDetailRepository { get; }
 		public IGenericRepository<Rating> RatingRepository { get; }
+        public IGenericRepository<Category> CategoryRepository { get; }
+        public IGenericRepository<Brand> BrandRepository { get; }
 
-
-		public UnitOfWork(ViGlideAdaptixContext context)
+        public UnitOfWork(ViGlideAdaptixContext context)
 		{
 			_context = context;
 			CartRepository = new GenericRepository<ShoppingCart>(_context);
@@ -36,7 +35,10 @@ namespace ViGlideAdaptix_DAL.Repository
 			OrderRepository = new GenericRepository<Order>(_context);
 			OrderDetailRepository = new GenericRepository<OrderDetail>(_context);
 			RatingRepository = new GenericRepository<Rating>(_context);
-		}
+            CategoryRepository = new GenericRepository<Category>(_context);
+			BrandRepository = new GenericRepository<Brand>(_context);
+
+        }
 		public async Task BeginTransactionAsync()
 		{
 			_transaction = await _context.Database.BeginTransactionAsync();

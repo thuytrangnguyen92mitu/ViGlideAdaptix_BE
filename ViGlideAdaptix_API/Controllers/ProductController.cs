@@ -32,10 +32,30 @@ namespace ViGlideAdaptix_API.Controllers
 		}
 
 		/// <summary>
-		/// Get detail of product
-		/// productId
+		/// Get all category list
 		/// </summary>
-		[HttpGet("{productId}")]
+		[HttpGet("category")]
+		public async Task<IActionResult> GetAllCategory()
+		{
+			var result = await _productServices.GetCateList();
+			return Ok(result);
+		}
+
+		/// <summary>
+		/// Get all brand list
+		/// </summary>
+        [HttpGet("brand")]
+        public async Task<IActionResult> GetAllBrand()
+        {
+            var result = await _productServices.GetBrandList();
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Get detail of product
+        /// productId
+        /// </summary>
+        [HttpGet("{productId}")]
 		public async Task<IActionResult> GetDetailOfProduct(int productId)
 		{
 			if (!ModelState.IsValid)
