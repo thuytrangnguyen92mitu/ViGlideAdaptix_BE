@@ -36,7 +36,6 @@ namespace ViGlideAdaptix_API.Controllers
         [HttpGet("images")]
         public IActionResult GetImages(string imageName)
         {
-            //get path to the image requested
             var imagePath = Path.Combine(_env.ContentRootPath, "uploads", imageName);
 
             if (!System.IO.File.Exists(imagePath))
@@ -45,6 +44,31 @@ namespace ViGlideAdaptix_API.Controllers
             }
 
             byte[] fileBytes;
+            string mimeType;
+
+            // Detect MIME type based on file extension
+            string fileExtension = Path.GetExtension(imageName).ToLower();
+            switch (fileExtension)
+            {
+                case ".jpeg":
+                case ".jpg":
+                    mimeType = "image/jpeg";
+                    break;
+                case ".png":
+                    mimeType = "image/png";
+                    break;
+                case ".gif":
+                    mimeType = "image/gif";
+                    break;
+                case ".webp":
+                    mimeType = "image/webp";
+                    break;
+                default:
+                    mimeType = "application/octet-stream"; // fallback to binary if unrecognized
+                    break;
+            }
+
+            // Read image data
             using (var ms = new MemoryStream())
             {
                 using (var defaultUserImg = new FileStream(imagePath, FileMode.Open))
@@ -55,8 +79,12 @@ namespace ViGlideAdaptix_API.Controllers
             }
 
             string base64String = Convert.ToBase64String(fileBytes);
-            return Ok(base64String);
+
+            // Return the image in base64 format
+            return Ok(new { image = $"data:{mimeType};base64,{base64String}" });
         }
+
+
 
         /// <summary>
         /// Get all category list
@@ -93,7 +121,9 @@ namespace ViGlideAdaptix_API.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Mod create new product
+        /// CreateProductResquestDTO
+        /// productImage
         /// </summary>
         [HttpPost("add")]
         //[Authorize(Roles = "mod")]
@@ -103,29 +133,36 @@ namespace ViGlideAdaptix_API.Controllers
                 return BadRequest(ModelState);
 
             if (productImage == null || productImage.Length == 0)
-            {
                 return BadRequest("No image uploaded.");
-            }
+
+            // Define the upload path
             var uploadPath = Path.Combine(_env.ContentRootPath, "uploads");
-            Directory.CreateDirectory(uploadPath); // Ensure the directory exists
 
-           //path to the location to save image (with the file name included) .ie : <solution>/uploads/<filename>.<ext>
-            var filePath = Path.Combine(uploadPath, Path.GetFileName(productImage.FileName));
+            // Ensure the directory exists
+            Directory.CreateDirectory(uploadPath);
 
-            // Save the image to the server
+            // Generate a unique file name based on GUID
+            var uniqueFileName = $"{Guid.NewGuid()}_{Path.GetFileName(productImage.FileName)}";
+
+            // Define the full file path to store the image
+            var filePath = Path.Combine(uploadPath, uniqueFileName);
+
+            // Save the image to the uploads directory
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 await productImage.CopyToAsync(stream);
             }
 
-            //Generate image path and create Product
-            request.ProductImage = productImage.FileName;
+            // Store only the image file name (not the full path) in the request DTO
+            request.ProductImage = uniqueFileName;
 
+            // Call the service to create the product
             var (isCreated, message) = await _productServices.ModCreateProduct(request);
-            if (isCreated)
-                return Ok(message);
 
-            return BadRequest(message);
+            // Return the response
+            return isCreated ? Ok(message) : BadRequest(message);
         }
+
+
     }
 }

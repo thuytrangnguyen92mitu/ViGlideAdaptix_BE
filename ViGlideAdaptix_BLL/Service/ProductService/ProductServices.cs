@@ -71,7 +71,7 @@ namespace ViGlideAdaptix_BLL.Service.ProductService
                     ProductId = p.ProductId,
                     ProductName = p.ProductName,
                     ProductDescription = p.ProductDescription,
-                    ProductImage = _imageHelper.ConvertImageToBase64(p.ProductImage),
+                    ProductImage = p.ProductImage,
                     CategoryId = p.CategoryId,
                     BrandId = p.BrandId,
                     Purchases = p.Purchases,
@@ -150,22 +150,26 @@ namespace ViGlideAdaptix_BLL.Service.ProductService
                 if (request.BrandId <= 0)
                     return (false, "Invalid input. Invalid brandId");
 
+                // imageFileName will now only store the file name (e.g., uniqueFileName)
                 string? imageFileName = null;
                 if (!string.IsNullOrEmpty(request.ProductImage))
                 {
                     try
                     {
-                        imageFileName = _imageHelper.SaveImage(request.ProductImage);
+                        // No need to handle full path here, just store the image file name
+                        imageFileName = request.ProductImage;  // This is the file name only, no path
                     }
                     catch (Exception ex)
                     {
                         return (false, $"Failed to save image. Error: {ex.Message}");
                     }
                 }
+
+                // Creating the product object with the file name for the image
                 var newProduct = new Product()
                 {
                     ProductName = request.ProductName,
-                    ProductImage = imageFileName,
+                    ProductImage = imageFileName, // Store only the file name
                     ProductDescription = request.ProductDescription,
                     UnitPrice = request.UnitPrice,
                     CategoryId = request.CategoryId,
@@ -174,19 +178,22 @@ namespace ViGlideAdaptix_BLL.Service.ProductService
                     Status = 1
                 };
 
+                // Adding product to the repository and saving changes
                 await _unitOfWork.ProductRepository.AddAsync(newProduct);
                 await _unitOfWork.SaveChangesAsync();
 
+                // Committing the transaction
                 await _unitOfWork.CommitTransactionAsync();
                 return (true, "Create product successfully");
             }
             catch (Exception ex)
             {
+                // If any exception occurs, roll back the transaction
                 await _unitOfWork.RollbackTransactionAsync();
-                throw new ApplicationException("Error create product", ex);
+                throw new ApplicationException("Error creating product", ex);
             }
-
         }
+
 
         /// <summary>
         /// Help to get all rating score of product
