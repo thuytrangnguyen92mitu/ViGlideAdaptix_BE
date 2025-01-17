@@ -13,6 +13,8 @@ namespace ViGlideAdaptix_BLL.Service.ProductService
         Task<AllProductResponseDTO?> GetProductDetail(int productId);
         Task<(bool, string)> ModCreateProduct(CreateProductResquestDTO request);
         Task<List<CategoryResponseDTO>?> GetCateList();
+        Task<string?> GetCateName(int categoryId);
         Task<List<BrandResponseDTO>?> GetBrandList();
+        Task<string?> GetBrandName(int brandId);
     }
 }

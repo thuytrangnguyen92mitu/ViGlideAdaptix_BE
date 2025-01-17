@@ -96,6 +96,13 @@ namespace ViGlideAdaptix_API.Controllers
             return Ok(result);
         }
 
+        [HttpGet("category/{categoryId}")]
+        public async Task<IActionResult> GetCategoryById(int categoryId)
+        {
+            var cate = await _productServices.GetCateName(categoryId);
+            return Ok(cate);
+        }
+
         /// <summary>
         /// Get all brand list
         /// </summary>
@@ -105,7 +112,12 @@ namespace ViGlideAdaptix_API.Controllers
             var result = await _productServices.GetBrandList();
             return Ok(result);
         }
-
+        [HttpGet("brand/{brandId}")]
+        public async Task<IActionResult> GetBrandById(int brandId)
+        {
+            var brand = await _productServices.GetBrandName(brandId);
+            return Ok(brand);
+        }
         /// <summary>
         /// Get detail of product
         /// productId

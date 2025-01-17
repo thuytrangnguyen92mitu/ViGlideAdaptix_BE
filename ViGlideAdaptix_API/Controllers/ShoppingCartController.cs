@@ -23,7 +23,7 @@ namespace ViGlideAdaptix_API.Controllers
 		/// Return Cart, Cart Detail, Message
 		/// </summary>
 		[HttpPost("get")]
-        [Authorize(Roles = "customer")]
+        //[Authorize(Roles = "customer")]
         public async Task<IActionResult> GetCart([FromBody] CartRequestDTO request)
 		{
 			if (!ModelState.IsValid)
@@ -45,7 +45,7 @@ namespace ViGlideAdaptix_API.Controllers
 		/// 
 		/// </summary>
 		[HttpPost("add")]
-        [Authorize(Roles = "customer")]
+        //[Authorize(Roles = "customer")]
         public async Task<IActionResult> AddItemToCart([FromBody] AddToCartRequestDTO request)
 		{
 			if (!ModelState.IsValid)
@@ -61,7 +61,7 @@ namespace ViGlideAdaptix_API.Controllers
 		/// 
 		/// </summary>
 		[HttpPost("remove")]
-        [Authorize(Roles = "customer")]
+        //[Authorize(Roles = "customer")]
         public async Task<IActionResult> RemoveItemFromCart([FromBody] RemoveFromCartDTO request)
 		{
 			if (!ModelState.IsValid)
@@ -81,7 +81,7 @@ namespace ViGlideAdaptix_API.Controllers
 		/// Clear all items of that cart
 		/// </summary>
 		[HttpDelete("clear")]
-        [Authorize(Roles = "customer")]
+        //[Authorize(Roles = "customer")]
         public async Task<IActionResult> ClearCart([FromQuery] int cartId)
 		{
 			if (!ModelState.IsValid)
@@ -101,7 +101,7 @@ namespace ViGlideAdaptix_API.Controllers
 		/// <param name="request"></param>
 		/// <returns></returns>
 		[HttpPost("checkout")]
-        [Authorize(Roles = "customer")]
+        //[Authorize(Roles = "customer")]
         public async Task<IActionResult> CheckOutCart([FromBody] CheckOutRequestDTO request)
 		{
 			if (!ModelState.IsValid)

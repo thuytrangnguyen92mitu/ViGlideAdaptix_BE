@@ -230,7 +230,13 @@ namespace ViGlideAdaptix_BLL.Service.ProductService
             }
             return responseList;
         }
-
+        public async Task<string?> GetCateName(int categoryId)
+        {
+            var foundCate = await _unitOfWork.CategoryRepository.GetByIdAsync(categoryId);
+            if (foundCate != null)
+                return foundCate.CategoryName;
+            return null;
+        }
         public async Task<List<BrandResponseDTO>?> GetBrandList()
         {
             var listBrand = await _unitOfWork.BrandRepository.GetAllAsync();
@@ -248,6 +254,14 @@ namespace ViGlideAdaptix_BLL.Service.ProductService
                 responseList.Add(convertBrand);
             }
             return responseList;
+        }
+
+        public async Task<string?> GetBrandName(int brandId)
+        {
+            var foundBrand = await _unitOfWork.BrandRepository.GetByIdAsync(brandId);
+            if (foundBrand != null)
+                return foundBrand.BrandName;
+            return null;
         }
     }
 }
