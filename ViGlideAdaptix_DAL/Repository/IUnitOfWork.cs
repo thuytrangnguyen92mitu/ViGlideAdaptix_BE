@@ -19,8 +19,10 @@ namespace ViGlideAdaptix_DAL.Repository
         IGenericRepository<Category> CategoryRepository { get; }
         IGenericRepository<Brand> BrandRepository { get; }
         IGenericRepository<Rating> RatingRepository { get; }
+        IGenericRepository<PaymentHistory> PaymentHistoryRepository { get; }
 
-		Task BeginTransactionAsync();
+
+        Task BeginTransactionAsync();
 		Task CommitTransactionAsync();
 		Task RollbackTransactionAsync();
 		Task SaveChangesAsync();

@@ -23,6 +23,8 @@ namespace ViGlideAdaptix_DAL.Repository
 		public IGenericRepository<Rating> RatingRepository { get; }
         public IGenericRepository<Category> CategoryRepository { get; }
         public IGenericRepository<Brand> BrandRepository { get; }
+        public IGenericRepository<PaymentHistory> PaymentHistoryRepository { get; }
+
 
         public UnitOfWork(ViGlideAdaptixContext context)
 		{
@@ -37,7 +39,7 @@ namespace ViGlideAdaptix_DAL.Repository
 			RatingRepository = new GenericRepository<Rating>(_context);
             CategoryRepository = new GenericRepository<Category>(_context);
 			BrandRepository = new GenericRepository<Brand>(_context);
-
+            PaymentHistoryRepository = new GenericRepository<PaymentHistory>(_context);
         }
 		public async Task BeginTransactionAsync()
 		{
