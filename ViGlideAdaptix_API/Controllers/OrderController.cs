@@ -18,7 +18,6 @@ namespace ViGlideAdaptix_API.Controllers
 		}
 
 		[HttpPost("confirm/{orderId}")]
-        [Authorize(Roles = "customer")]
         public async Task<IActionResult> ConfirmOrder(int orderId)
 		{
 			if (!ModelState.IsValid)
@@ -32,7 +31,6 @@ namespace ViGlideAdaptix_API.Controllers
 		}
 
 		[HttpPost("cancel/{orderId}")]
-        [Authorize(Roles = "customer")]
         public async Task<IActionResult> CancelOrder(int orderId)
 		{
 			if (!ModelState.IsValid)
@@ -46,7 +44,6 @@ namespace ViGlideAdaptix_API.Controllers
 		}
 
 		[HttpPost("rating")]
-        [Authorize(Roles = "customer")]
         public async Task<IActionResult> RatingProduct([FromQuery] int orderId, [FromBody] RatingRequestDTO request)
 		{
 			if (!ModelState.IsValid)

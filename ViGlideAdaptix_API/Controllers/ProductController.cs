@@ -84,7 +84,25 @@ namespace ViGlideAdaptix_API.Controllers
             return Ok(new { image = $"data:{mimeType};base64,{base64String}" });
         }
 
+        [HttpGet("newArrival")]
+        public async Task<IActionResult> GetNewArrivalProduct()
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
+            var result = await _productServices.GetNewArrivalProducts();
+            return Ok(result);
+        }
+
+        [HttpGet("bestSeller")]
+        public async Task<IActionResult> GetBestSellerProduct()
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await _productServices.GetBestSellerProducts();
+            return Ok(result);
+        }
 
         /// <summary>
         /// Get all category list

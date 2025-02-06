@@ -11,6 +11,8 @@ namespace ViGlideAdaptix_BLL.Service.ProductService
     {
         Task<PagedResult<AllProductResponseDTO>> GetAllProductAsync(QueryObjectDTO queryObject);
         Task<AllProductResponseDTO?> GetProductDetail(int productId);
+        Task<List<AllProductResponseDTO?>> GetNewArrivalProducts();
+        Task<List<AllProductResponseDTO?>> GetBestSellerProducts();
         Task<(bool, string)> ModCreateProduct(CreateProductResquestDTO request);
         Task<List<CategoryResponseDTO>?> GetCateList();
         Task<string?> GetCateName(int categoryId);

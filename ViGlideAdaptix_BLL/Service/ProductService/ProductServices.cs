@@ -124,6 +124,75 @@ namespace ViGlideAdaptix_BLL.Service.ProductService
             return null;
         }
 
+        public async Task<List<AllProductResponseDTO?>> GetNewArrivalProducts()
+        {
+            var products = (await _unitOfWork.ProductRepository.GetAllWithIncludeAsync(p => p.Category))
+                                                               .Where(x => x.CategoryId == 3)
+                                                               .OrderByDescending(x => x.ProductId)
+                                                               .Take(5)
+                                                               .ToList();
+
+            var convertedProduct = new List<AllProductResponseDTO>();
+
+            foreach (var p in products)
+            {
+                var ratings = await GetAllRatingOfProduct(p.ProductId);
+                double averageRating = (ratings == null || ratings.Count() == 0)
+                                        ? 0
+                                        : ratings.Average();
+
+                convertedProduct.Add(new AllProductResponseDTO
+                {
+                    ProductId = p.ProductId,
+                    ProductName = p.ProductName,
+                    ProductDescription = p.ProductDescription,
+                    ProductImage = p.ProductImage,
+                    CategoryId = p.CategoryId,
+                    BrandId = p.BrandId,
+                    Purchases = p.Purchases,
+                    Quantity = p.Quantity,
+                    RatingScore = averageRating,
+                    UnitPrice = p.UnitPrice,
+                });
+            }
+
+            return convertedProduct;
+        }
+
+        public async Task<List<AllProductResponseDTO?>> GetBestSellerProducts()
+        {
+            var products = (await _unitOfWork.ProductRepository.GetAllWithIncludeAsync(p => p.Category))
+                                                               .OrderByDescending(x => x.Purchases)
+                                                               .Take(4)
+                                                               .ToList();
+
+            var convertedProduct = new List<AllProductResponseDTO>();
+
+            foreach (var p in products)
+            {
+                var ratings = await GetAllRatingOfProduct(p.ProductId);
+                double averageRating = (ratings == null || ratings.Count() == 0)
+                                        ? 0
+                                        : ratings.Average();
+
+                convertedProduct.Add(new AllProductResponseDTO
+                {
+                    ProductId = p.ProductId,
+                    ProductName = p.ProductName,
+                    ProductDescription = p.ProductDescription,
+                    ProductImage = p.ProductImage,
+                    CategoryId = p.CategoryId,
+                    BrandId = p.BrandId,
+                    Purchases = p.Purchases,
+                    Quantity = p.Quantity,
+                    RatingScore = averageRating,
+                    UnitPrice = p.UnitPrice,
+                });
+            }
+
+            return convertedProduct;
+        }
+
         /// <summary>
         /// Create product (Mod)
         /// CreateProductResquestDTO

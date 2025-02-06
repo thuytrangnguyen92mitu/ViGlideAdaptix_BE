@@ -210,7 +210,7 @@ namespace ViGlideAdaptix_BLL.Service.CartService
             };
         }
 
-        public async Task<(bool, string)> CheckOutCartToPayment(CheckOutRequestDTO request)
+        public async Task<(bool, string, int,int)> CheckOutCartToPayment(CheckOutRequestDTO request)
         {
             try
             {
@@ -218,14 +218,14 @@ namespace ViGlideAdaptix_BLL.Service.CartService
 
                 var foundCart = await _unitOfWork.CartRepository.GetByIdWithIncludeAsync(request.CartId, "CartId", cart => cart.ShoppingCartItems);
                 if (foundCart == null)
-                    return (false, "Cart not found with this ID");
+                    return (false, "Cart not found with this ID", 0,0);
 
                 if (foundCart.CustomerId != request.CustomerId)
-                    return (false, "Cart does not belong to the specified user.");
+                    return (false, "Cart does not belong to the specified user.", 0, 0);
 
                 var paymentMethod = await _unitOfWork.PaymentMethodRepository.GetByIdAsync(request.PaymentMethodId);
                 if (paymentMethod == null)
-                    return (false, "Invalid or inactive payment method");
+                    return (false, "Invalid or inactive payment method", 0, 0);
 
                 var cartItems = foundCart.ShoppingCartItems;
                 if (cartItems != null)
@@ -280,12 +280,16 @@ namespace ViGlideAdaptix_BLL.Service.CartService
 
                     await _unitOfWork.CommitTransactionAsync();
 
-                    return (true, "Checkout successful. Order created.");
+                    var orderId = GetOrderIdOfCart(foundCart);
+                    var newCart = CreateNewCartOfCustomer(request.CustomerId);
+                    var newCartId = newCart.Result.CartId;
+
+                    return (true, "Checkout successful. Order created.", orderId, newCartId);
 
                 }
                 else
                 {
-                    return (false, "Cannot checkout with empty cart");
+                    return (false, "Cannot checkout with empty cart", 0, 0);
                 }
             }
             catch (Exception ex)
@@ -294,6 +298,42 @@ namespace ViGlideAdaptix_BLL.Service.CartService
                 throw new ApplicationException("Checkout failed.", ex);
             }
         }
+
+        private int GetOrderIdOfCart(ShoppingCart cart)
+        {
+            var foundOrder = cart.Orders?.FirstOrDefault(x => x.CartId == cart.CartId);
+            return foundOrder?.OrderId ?? 0;
+        }
+
+        private async Task<ShoppingCart> CreateNewCartOfCustomer(int customerId)
+        {
+            try
+            {
+                await _unitOfWork.BeginTransactionAsync();
+
+                var newCart = new ShoppingCart()
+                {
+                    CreatedDate = DateTime.UtcNow,
+                    CustomerId = customerId,
+                    SubTotal = 0,
+                    IsActive = true
+                };
+
+                await _unitOfWork.CartRepository.AddAsync(newCart);
+                await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.CommitTransactionAsync();
+
+                return newCart;
+            }
+            catch (Exception)
+            {
+                await _unitOfWork.RollbackTransactionAsync();
+                throw;
+            }
+
+        }
+
+
     }
 }
 

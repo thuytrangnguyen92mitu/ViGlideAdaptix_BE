@@ -14,6 +14,6 @@ namespace ViGlideAdaptix_BLL.Service.CartService
 		Task<(bool, string)> ClearCart(int cartId);
 		Task<(bool, string)> AddItemToCart(AddToCartRequestDTO request);
 		Task<(bool, string)> RemoveItemFromCart(RemoveFromCartDTO request);
-		Task<(bool, string)> CheckOutCartToPayment(CheckOutRequestDTO request);
+		Task<(bool, string, int,int)> CheckOutCartToPayment(CheckOutRequestDTO request);
 	}
 }
