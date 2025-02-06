@@ -12,4 +12,6 @@ public partial class PaymentMethod
     public bool Status { get; set; }
 
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+    public virtual ICollection<PaymentHistory> PaymentHistories { get; set; } = new List<PaymentHistory>();
+
 }

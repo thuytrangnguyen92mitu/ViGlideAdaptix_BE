@@ -29,5 +29,4 @@ public partial class ShoppingCart
 	{
 		return ShoppingCartItems.Sum(item => item.Quantity * item.UnitPrice) + ShippingPrice;
 	}
-
 }
