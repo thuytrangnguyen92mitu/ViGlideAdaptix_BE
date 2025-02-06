@@ -5,6 +5,8 @@ using System.Text;
 using ViGlideAdaptix_BLL.Helper;
 using ViGlideAdaptix_BLL.Service.CartService;
 using ViGlideAdaptix_BLL.Service.CustomerService;
+using ViGlideAdaptix_BLL.Service.OrderService;
+using ViGlideAdaptix_BLL.Service.PaymentServices;
 using ViGlideAdaptix_BLL.Service.ProductService;
 using ViGlideAdaptix_DAL.Models;
 using ViGlideAdaptix_DAL.Repository;
@@ -18,6 +20,13 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+//Add Momo Service
+builder.Services.AddScoped<MomoService>();
+//Add VnPay Service
+builder.Services.AddScoped<VnPayService>();
+
+
 //Add service for DBContext
 builder.Services.AddDbContext<ViGlideAdaptixContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -41,6 +50,8 @@ builder.Services.AddScoped<ImageHelper>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
 builder.Services.AddScoped<IProductServices, ProductServices>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 //Register for Repository
