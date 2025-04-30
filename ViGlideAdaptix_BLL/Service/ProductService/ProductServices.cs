@@ -27,12 +27,15 @@ namespace ViGlideAdaptix_BLL.Service.ProductService
         /// </summary>
         public async Task<PagedResult<AllProductResponseDTO>> GetAllProductAsync(QueryObjectDTO queryObject)
         {
-            //Set default pageSize and pageNumber of not inputed
+            //Set default pageSize and pageNumber if not inputed
             int pageSize = queryObject.PageSize > 0 ? queryObject.PageSize : 16;
             int pageNumber = queryObject.PageNumber > 0 ? queryObject.PageNumber : 1;
 
             //Get all products include category
-            var products = (await _unitOfWork.ProductRepository.GetAllWithIncludeAsync(p => p.Category)).AsQueryable();
+            var products = (await _unitOfWork.ProductRepository.GetAllWithIncludeAsync(p => p.Category))
+                .Where(x => x.Quantity > 0 &&
+                            x.Status == 1)
+                .AsQueryable();
 
             //Search with product name
             if (!string.IsNullOrEmpty(queryObject.ProductName))
